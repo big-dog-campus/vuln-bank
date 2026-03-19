@@ -217,10 +217,15 @@
             const noResults = document.getElementById('no-results');
             let visibleCount = 0;
 
-            // XSS vulnerability: Reflect user input directly without sanitization
+            // Safely reflect user input without using innerHTML for untrusted data
             if (query && query.trim() !== '') {
                 searchInfo.style.display = 'block';
-                searchInfo.innerHTML = 'Searching for: <strong>' + query + '</strong>'; // XSS vulnerability here
+                // Set static HTML structure, then insert untrusted text safely
+                searchInfo.innerHTML = 'Searching for: <strong></strong>';
+                const strongEl = searchInfo.querySelector('strong');
+                if (strongEl) {
+                    strongEl.textContent = query;
+                }
 
                 // Update URL parameter to hint at vulnerability
                 if (updateUrl) {
